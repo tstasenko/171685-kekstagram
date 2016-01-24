@@ -1,12 +1,11 @@
 function getMessage(a, b) {
   if (typeof a == 'boolean')
   {
-        if (a == true) {
-        return 'Переданное GIF-изображение анимировано и содержит '+ b + ' кадров';
-      }
-       else {
-        return 'Переданное GIF-изображение не анимировано';
-      }
+    if (a) {
+      return 'Переданное GIF-изображение анимировано и содержит '+ b + ' кадров';
+    } else {
+      return 'Переданное GIF-изображение не анимировано';
+    }
   }
 
   if (typeof a == 'number')
@@ -15,12 +14,10 @@ function getMessage(a, b) {
   }
 
   if (Array.isArray(a) && Array.isArray(b)) {
-    var arr = [];
-    for (i=0; i < a.length; i++) {
-      arr.push(a[i]*b[i]);
+    if (a.length == b.length) {
+      var square = a.map(function(a, i){return a*b[i]}).reduce(function(prev,value){return prev + value });
+      return 'Общая площадь артефактов сжатия: ' + square + ' пикселей'
     }
-    var square = arr.reduce(function(prev,value){return prev + value });
-    return 'Общая площадь артефактов сжатия: ' + square + ' пикселей'
   }
 
   if (Array.isArray(a)) {
