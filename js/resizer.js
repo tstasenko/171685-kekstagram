@@ -210,26 +210,26 @@
       this._ctx.stroke();
 
      },
-// Функция для отрисовки рамки точками.
-     // for (x; x < length; x = x + nextStep) {
-//   ctx.moveTo(x, y);
-//   ctx.lineTo(x+lengthDashFirstStep, y);
-// }
+    // Функция для отрисовки рамки точками.
+         // for (x; x < length; x = x + nextStep) {
+    //   ctx.moveTo(x, y);
+    //   ctx.lineTo(x+lengthDashFirstStep, y);
+    // }
 
-// for (y; y < length; y = y + nextStep) {
-//   ctx.moveTo(x, y);
-//   ctx.lineTo(x, y+lengthDashFirstStep);
-// }
+    // for (y; y < length; y = y + nextStep) {
+    //   ctx.moveTo(x, y);
+    //   ctx.lineTo(x, y+lengthDashFirstStep);
+    // }
 
-// for (x; x > length; x = x - nextStep) {
-//   ctx.moveTo(x, y);
-//   ctx.lineTo(x-lengthDashFirstStep, y);
-// }
+    // for (x; x > length; x = x - nextStep) {
+    //   ctx.moveTo(x, y);
+    //   ctx.lineTo(x-lengthDashFirstStep, y);
+    // }
 
-// for (y; y > length; y = y - nextStep) {
-//   ctx.moveTo(x, y);
-//   ctx.lineTo(x, y-lengthDashFirstStep);
-// }
+    // for (y; y > length; y = y - nextStep) {
+    //   ctx.moveTo(x, y);
+    //   ctx.lineTo(x, y-lengthDashFirstStep);
+    // }
 
  textSizeImage: function(text) {
         var textSize = 10;
