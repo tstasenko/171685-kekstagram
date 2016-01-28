@@ -78,24 +78,11 @@
     /**
      * Отрисовка канваса.
      */
+
     redraw: function() {
       // Очистка изображения.
       this._ctx.clearRect(0, 0, this._container.width, this._container.height);
 
-      // Параметры линии.
-      // NB! Такие параметры сохраняются на время всего процесса отрисовки
-      // canvas'a поэтому важно вовремя поменять их, если нужно начать отрисовку
-      // чего-либо с другой обводкой.
-
-      // Толщина линии.
-      this._ctx.lineWidth = 6;
-      // Цвет обводки.
-      this._ctx.strokeStyle = '#ffe753';
-      // Размер штрихов. Первый элемент массива задает длину штриха, второй
-      // расстояние между соседними штрихами.
-      this._ctx.setLineDash([15, 10]);
-      // Смещение первого штриха от начала линии.
-      this._ctx.lineDashOffset = 7;
 
       // Сохранение состояния канваса.
       // Подробней см. строку 132.
@@ -106,18 +93,57 @@
 
       var displX = -(this._resizeConstraint.x + this._resizeConstraint.side / 2);
       var displY = -(this._resizeConstraint.y + this._resizeConstraint.side / 2);
+
       // Отрисовка изображения на холсте. Параметры задают изображение, которое
       // нужно отрисовать и координаты его верхнего левого угла.
       // Координаты задаются от центра холста.
       this._ctx.drawImage(this._image, displX, displY);
 
+// Отрисовка затемненного фона прямоугольниками.
+      // this._ctx.fillStyle = 'rgba(0,0,0,0.8)';
+      // this._ctx.rect(
+      //   (-this._container.width / 2) - this._ctx.lineWidth, // x
+      //   -this._container.height / 2, //y
+      //   (this._container.width - this._resizeConstraint.side) / 2, //ширина
+      //   this._container.height //высота
+      // );
+
+      // this._ctx.rect(
+      //   this._resizeConstraint.side / 2,
+      //   -this._container.height / 2,
+      //   (this._container.width - this._resizeConstraint.side) / 2,
+      //   this._container.height
+      //   );
+
+      // this._ctx.rect(
+      //   -(this._resizeConstraint.side / 2) - this._ctx.lineWidth,
+      //   -this._container.height / 2,
+      //   this._resizeConstraint.side + this._ctx.lineWidth,
+      //   ((this._container.height - this._resizeConstraint.side) / 2) - this._ctx.lineWidth
+      //   );
+
+      //    this._ctx.rect(
+      //   -(this._resizeConstraint.side / 2) - this._ctx.lineWidth,
+      //   this._resizeConstraint.side  / 2,
+      //   this._resizeConstraint.side + this._ctx.lineWidth,
+      //   ((this._container.height - this._resizeConstraint.side) / 2) - this._ctx.lineWidth
+      //   );
+      // this._ctx.fill();
+
+
+
+      this.zigzag(-this._resizeConstraint.side / 2,
+        -this._resizeConstraint.side / 2,
+        this._resizeConstraint.side / 2);
+      this.textSizeImage(this._image.naturalWidth + ' x ' + this._image.naturalHeight);
+
       // Отрисовка прямоугольника, обозначающего область изображения после
       // кадрирования. Координаты задаются от центра.
-      this._ctx.strokeRect(
-          (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
-          (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
-          this._resizeConstraint.side - this._ctx.lineWidth / 2,
-          this._resizeConstraint.side - this._ctx.lineWidth / 2);
+      // this._ctx.strokeRect(
+      //     (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
+      //     (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
+      //     this._resizeConstraint.side - this._ctx.lineWidth / 2,
+      //     this._resizeConstraint.side - this._ctx.lineWidth / 2);
 
       // Восстановление состояния канваса, которое было до вызова ctx.save
       // и последующего изменения системы координат. Нужно для того, чтобы
@@ -136,6 +162,83 @@
      * @param {number} y
      * @private
      */
+     zigzag: function(x, y, length) {
+      // Настраиваем режим отображения изображения, чтобы за пределами фигуры было затемнение.
+      this._ctx.globalCompositeOperation = 'destination-in';
+      // Параметры линии.
+      // NB! Такие параметры сохраняются на время всего процесса отрисовки
+      // canvas'a поэтому важно вовремя поменять их, если нужно начать отрисовку
+      // чего-либо с другой обводкой.
+
+      // Толщина линии.
+      this._ctx.lineWidth = 4;
+      // Цвет обводки.
+      this._ctx.strokeStyle = '#ffe753';
+      // // Размер штрихов. Первый элемент массива задает длину штриха, второй
+      // // расстояние между соседними штрихами.
+
+      var nextStep = 15;
+      var lengthDash = 8;
+      var lengthDashFirstStep = 2;
+
+
+        this._ctx.beginPath();
+        for (x; x < length; x = x + nextStep) {
+          this._ctx.lineTo(x+lengthDashFirstStep, y);
+          this._ctx.lineTo(x+lengthDash, y+lengthDash);
+
+        }
+        for (y; y < length; y = y + nextStep) {
+          this._ctx.lineTo(x, y+lengthDashFirstStep);
+          this._ctx.lineTo(x+lengthDash, y+lengthDash);
+        }
+
+        for (x; x > -length; x = x - nextStep) {
+          this._ctx.lineTo(x-lengthDashFirstStep,y);
+          this._ctx.lineTo(x-lengthDash,y-lengthDash);
+        }
+
+        for (y; y > -length; y = y - nextStep) {
+          this._ctx.lineTo(x, y-lengthDashFirstStep);
+          this._ctx.lineTo(x-lengthDash, y-lengthDash);
+        }
+      this._ctx.closePath();
+      this._ctx.fill();
+
+      this._ctx.globalCompositeOperation = 'source-over';
+
+      this._ctx.stroke();
+
+     },
+// Функция для отрисовки рамки точками.
+     // for (x; x < length; x = x + nextStep) {
+//   ctx.moveTo(x, y);
+//   ctx.lineTo(x+lengthDashFirstStep, y);
+// }
+
+// for (y; y < length; y = y + nextStep) {
+//   ctx.moveTo(x, y);
+//   ctx.lineTo(x, y+lengthDashFirstStep);
+// }
+
+// for (x; x > length; x = x - nextStep) {
+//   ctx.moveTo(x, y);
+//   ctx.lineTo(x-lengthDashFirstStep, y);
+// }
+
+// for (y; y > length; y = y - nextStep) {
+//   ctx.moveTo(x, y);
+//   ctx.lineTo(x, y-lengthDashFirstStep);
+// }
+
+ textSizeImage: function(text) {
+        var textSize = 10;
+        this._ctx.fillStyle ='#FFF';
+        this._ctx.font = textSize + 'pt Arial';
+        this._ctx.fillText(text, -35, -this._resizeConstraint.side / 2 - textSize * 2);
+
+     },
+
     _enterDragMode: function(x, y) {
       this._cursorPosition = new Coordinate(x, y);
       document.body.addEventListener('mousemove', this._onDrag);
@@ -163,6 +266,17 @@
           this._cursorPosition.x - x,
           this._cursorPosition.y - y);
       this._cursorPosition = new Coordinate(x, y);
+    },
+
+
+    /**
+     * Перемещение изображения относительно кадра.
+     * @param {number} x
+     * @param {number} y
+     * @private
+     */
+    drawDottedBorder: function(x, y) {
+
     },
 
     /**
