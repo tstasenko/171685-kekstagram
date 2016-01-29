@@ -135,11 +135,11 @@
         ((this._container.height - this._resizeConstraint.side) / 2) - this._ctx.lineWidth
         );
 
-         this._ctx.rect(
+      this._ctx.rect(
         -(this._resizeConstraint.side / 2) - this._ctx.lineWidth,
-        this._resizeConstraint.side  / 2,
+        this._resizeConstraint.side / 2,
         this._resizeConstraint.side + this._ctx.lineWidth,
-        ((this._container.height - this._resizeConstraint.side) / 2) - this._ctx.lineWidth
+        ((this._container.height - this._resizeConstraint.side)) - this._ctx.lineWidth
         );
       this._ctx.fill();
 
@@ -171,13 +171,12 @@
      * @private
      */
 
- textSizeImage: function(text) {
-        var textSize = 10;
-        this._ctx.fillStyle ='#FFF';
-        this._ctx.font = textSize + 'pt Arial';
-        this._ctx.fillText(text, -35, -this._resizeConstraint.side / 2 - textSize * 2);
-
-     },
+    textSizeImage: function(text) {
+      var textSize = 10;
+      this._ctx.fillStyle = '#FFF';
+      this._ctx.font = textSize + 'pt Arial';
+      this._ctx.fillText(text, -35, -this._resizeConstraint.side / 2 - textSize * 2);
+    },
 
     _enterDragMode: function(x, y) {
       this._cursorPosition = new Coordinate(x, y);
@@ -206,17 +205,6 @@
           this._cursorPosition.x - x,
           this._cursorPosition.y - y);
       this._cursorPosition = new Coordinate(x, y);
-    },
-
-
-    /**
-     * Перемещение изображения относительно кадра.
-     * @param {number} x
-     * @param {number} y
-     * @private
-     */
-    drawDottedBorder: function(x, y) {
-
     },
 
     /**
