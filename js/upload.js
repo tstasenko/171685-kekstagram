@@ -1,4 +1,5 @@
 /* global Resizer: true */
+/* global docCookies: true */
 
 /**
  * @fileoverview
@@ -218,12 +219,11 @@
    * записав сохраненный фильтр в cookie.
    * @param {Event} evt
    */
+
   filterForm.onsubmit = function(evt) {
     evt.preventDefault();
-
     cleanupResizer();
     updateBackground();
-
     filterForm.classList.add('invisible');
     uploadForm.classList.remove('invisible');
   };
@@ -243,10 +243,11 @@
         'sepia': 'filter-sepia'
       };
     }
-
+    var dateForExpires = Date.now - new Date('2015-08-26');
     var selectedFilter = [].filter.call(filterForm['upload-filter'], function(item) {
       return item.checked;
     })[0].value;
+    docCookies.setItem('defaultFilter', selectedFilter, dateForExpires);
 
     // Класс перезаписывается, а не обновляется через classList потому что нужно
     // убрать предыдущий примененный класс. Для этого нужно или запоминать его
