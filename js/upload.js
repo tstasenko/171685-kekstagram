@@ -87,6 +87,8 @@
     }
     return true;
   }
+
+
   /**
    * Форма загрузки изображения.
    * @type {HTMLFormElement}
@@ -144,6 +146,7 @@
   function hideMessage() {
     uploadMessage.classList.add('invisible');
   }
+
 
   /**
    * Обработчик изменения изображения в форме загрузки. Если загруженный
@@ -214,6 +217,8 @@
       filterImage.src = currentResizer.exportImage().src;
 
       resizeForm.classList.add('invisible');
+      document.getElementById('upload-filter-' + docCookies.getItem('defaultFilter')).checked = true;
+      filterImage.className = 'filter-image-preview filter-' + docCookies.getItem('defaultFilter');
       filterForm.classList.remove('invisible');
     }
   };
