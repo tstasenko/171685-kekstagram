@@ -203,11 +203,21 @@
    * кропнутое изображение в форму добавления фильтра и показывает ее.
    * @param {Event} evt
    */
+  resizeForm.onkeypress = function() {
+    if (!resizeFormIsValid()) {
+      resizeFormButton.classList.add('upload-form-controls-fwd-disabled');
+      resizeFormButton.disabled = true;
+    } else {
+      resizeFormButton.classList.remove('upload-form-controls-fwd-disabled');
+      resizeFormButton.disabled = false;
+    }
+  };
+
+
   resizeForm.onsubmit = function(evt) {
     evt.preventDefault();
     if (!resizeFormIsValid()) {
       resizeFormButton.disabled = true;
-      console.log(resizeFormButton.disabled);
     }
     if (resizeFormIsValid()) {
       filterImage.src = currentResizer.exportImage().src;
