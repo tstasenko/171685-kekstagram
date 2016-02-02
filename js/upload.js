@@ -203,7 +203,7 @@
    * кропнутое изображение в форму добавления фильтра и показывает ее.
    * @param {Event} evt
    */
-  resizeForm.onkeypress = function() {
+  resizeForm.onkeyup = function() {
     if (!resizeFormIsValid()) {
       resizeFormButton.classList.add('upload-form-controls-fwd-disabled');
       resizeFormButton.disabled = true;
