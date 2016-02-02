@@ -72,9 +72,20 @@
    * @return {boolean}
    */
   function resizeFormIsValid() {
+    var x = +resizeForm['resize-x'].value;
+    var y = +resizeForm['resize-y'].value;
+    var size = +resizeForm['resize-size'].value;
+    if (x < 0 || y < 0) {
+      return false;
+    }
+    if (currentResizer._image.naturalWidth < x + size) {
+      return false;
+    }
+    if (currentResizer._image.naturalHeight < y + size) {
+      return false;
+    }
     return true;
   }
-
   /**
    * Форма загрузки изображения.
    * @type {HTMLFormElement}
@@ -86,6 +97,7 @@
    * @type {HTMLFormElement}
    */
   var resizeForm = document.forms['upload-resize'];
+  var resizeFormButton = resizeForm['resize-fwd'];
 
   /**
    * Форма добавления фильтра.
@@ -191,9 +203,22 @@
    * кропнутое изображение в форму добавления фильтра и показывает ее.
    * @param {Event} evt
    */
+  resizeForm.onkeyup = function() {
+    if (!resizeFormIsValid()) {
+      resizeFormButton.classList.add('upload-form-controls-fwd-disabled');
+      resizeFormButton.disabled = true;
+    } else {
+      resizeFormButton.classList.remove('upload-form-controls-fwd-disabled');
+      resizeFormButton.disabled = false;
+    }
+  };
+
+
   resizeForm.onsubmit = function(evt) {
     evt.preventDefault();
-
+    if (!resizeFormIsValid()) {
+      resizeFormButton.disabled = true;
+    }
     if (resizeFormIsValid()) {
       filterImage.src = currentResizer.exportImage().src;
 
@@ -253,7 +278,6 @@
     // состояние или просто перезаписывать.
     filterImage.className = 'filter-image-preview ' + filterMap[selectedFilter];
   };
-
   cleanupResizer();
   updateBackground();
 })();
