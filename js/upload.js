@@ -217,7 +217,8 @@
       filterImage.src = currentResizer.exportImage().src;
 
       resizeForm.classList.add('invisible');
-      document.getElementById('upload-filter-' + docCookies.getItem('defaultFilter')).checked = true;
+      var defaultFilter = docCookies.getItem('defaultFilter') || 'none';
+      document.getElementById('upload-filter-' + defaultFilter).checked = true;
       filterImage.className = 'filter-image-preview filter-' + docCookies.getItem('defaultFilter');
       filterForm.classList.remove('invisible');
     }
