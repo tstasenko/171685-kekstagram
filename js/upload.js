@@ -1,4 +1,5 @@
 /* global Resizer: true */
+/* global docCookies: true */
 
 /**
  * @fileoverview
@@ -86,6 +87,8 @@
     }
     return true;
   }
+
+
   /**
    * Форма загрузки изображения.
    * @type {HTMLFormElement}
@@ -143,6 +146,7 @@
   function hideMessage() {
     uploadMessage.classList.add('invisible');
   }
+
 
   /**
    * Обработчик изменения изображения в форме загрузки. Если загруженный
@@ -203,7 +207,7 @@
    * кропнутое изображение в форму добавления фильтра и показывает ее.
    * @param {Event} evt
    */
-  resizeForm.onkeypress = function() {
+  resizeForm.onkeyup = function() {
     if (!resizeFormIsValid()) {
       resizeFormButton.classList.add('upload-form-controls-fwd-disabled');
       resizeFormButton.disabled = true;
@@ -223,6 +227,9 @@
       filterImage.src = currentResizer.exportImage().src;
 
       resizeForm.classList.add('invisible');
+      var defaultFilter = docCookies.getItem('defaultFilter') || 'none';
+      document.getElementById('upload-filter-' + defaultFilter).checked = true;
+      filterImage.className = 'filter-image-preview filter-' + docCookies.getItem('defaultFilter');
       filterForm.classList.remove('invisible');
     }
   };
@@ -243,12 +250,11 @@
    * записав сохраненный фильтр в cookie.
    * @param {Event} evt
    */
+
   filterForm.onsubmit = function(evt) {
     evt.preventDefault();
-
     cleanupResizer();
     updateBackground();
-
     filterForm.classList.add('invisible');
     uploadForm.classList.remove('invisible');
   };
@@ -268,10 +274,11 @@
         'sepia': 'filter-sepia'
       };
     }
-
+    var dateForExpires = Date.now - new Date('2015-08-26');
     var selectedFilter = [].filter.call(filterForm['upload-filter'], function(item) {
       return item.checked;
     })[0].value;
+    docCookies.setItem('defaultFilter', selectedFilter, dateForExpires);
 
     // Класс перезаписывается, а не обновляется через classList потому что нужно
     // убрать предыдущий примененный класс. Для этого нужно или запоминать его
