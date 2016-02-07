@@ -1,4 +1,3 @@
-
 'use strict';
 
 (function() {
@@ -68,7 +67,6 @@
     xhr.send();
   }
 
-
   function getObjectFromTemplate(data) {
     var template = document.querySelector('#picture-template');
     var element = template.content.children[0].cloneNode(true);
@@ -97,6 +95,7 @@
 
     return element;
   }
+
 
   filters.classList.remove('hidden');
 })();
