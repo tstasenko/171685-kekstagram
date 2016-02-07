@@ -68,6 +68,7 @@
     xhr.send();
   }
 
+
   function getObjectFromTemplate(data) {
     var template = document.querySelector('#picture-template');
     var element = template.content.children[0].cloneNode(true);
@@ -83,7 +84,6 @@
       element.replaceChild(previewImage, element.querySelector('img'));
     };
 
-
     previewImage.onerror = function() {
       element.classList.add('picture-load-failure');
     };
@@ -97,5 +97,6 @@
 
     return element;
   }
+
   filters.classList.remove('hidden');
 })();
