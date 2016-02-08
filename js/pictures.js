@@ -58,11 +58,19 @@
   function getPictures() {
     var xhr = new XMLHttpRequest();
     xhr.open('GET', 'http://o0.github.io/assets/json/pictures.json');
+    xhr.timeout = 10000;
+    xhr.ontimeout = function() {
+      loadedPictures.classList.add('picture-load-failure');
+    };
 
     xhr.onload = function(evt) {
       var rawData = evt.target.response;
       loadedPictures = JSON.parse(rawData);
       setActiveFilter(activeFilter);
+    };
+
+    xhr.onerror = function() {
+      loadedPictures.classList.add('picture-load-failure');
     };
     xhr.send();
   }
