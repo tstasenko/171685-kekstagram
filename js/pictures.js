@@ -11,8 +11,6 @@
   var PAGE_SIZE = 12;
   var scrollTimeout;
 
-
-
   filters.classList.add('hidden');
   container.classList.add('pictures-loading');
 
@@ -44,14 +42,6 @@
 
   function setActiveFilter(id) {
     filteredPictures = loadedPictures.slice(0);
-  getPictures();
-
-  filters.onclick = function(evt) {
-    setActiveFilter(evt.target.id);
-  };
-
-  function setActiveFilter(id) {
-    var filteredPictures = loadedPictures.slice(0);
     var sortingFunction;
     switch (id) {
       case 'filter-discussed':
@@ -88,20 +78,12 @@
     var pagePicture = pictures.slice(from, to);
 
     pagePicture.forEach(function(picture) {
-    renderPhoto(filteredPictures);
-  }
-
-  function renderPhoto(pictures) {
-    container.innerHTML = '';
-    var fragment = document.createDocumentFragment();
-    pictures.forEach(function(picture) {
       var element = getObjectFromTemplate(picture);
       fragment.appendChild(element);
     });
     container.appendChild(fragment);
     container.classList.remove('pictures-loading');
   }
-
 
   function getPictures() {
     var xhr = new XMLHttpRequest();
@@ -152,6 +134,6 @@
     return element;
   }
 
-
   filters.classList.remove('hidden');
+
 })();
