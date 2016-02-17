@@ -1,22 +1,47 @@
+
 'use strict';
 
 (function() {
   var container = document.querySelector('.pictures');
   var filters = document.querySelector('.filters');
   var loadedPictures = [];
+  var filteredPictures = [];
   var activeFilter = 'filter-popular';
+  var currentPage = 0;
+  var PAGE_SIZE = 12;
+  var scrollTimeout;
 
   filters.classList.add('hidden');
   container.classList.add('pictures-loading');
 
+  window.addEventListener('scroll', fillPage);
+  window.addEventListener('resize', fillPage);
+
+  filteredPictures = loadedPictures.slice(0);
   getPictures();
 
-  filters.onclick = function(evt) {
-    setActiveFilter(evt.target.id);
-  };
+  filters.addEventListener('click', function(event) {
+    var clickedElement = event.target;
+    if (clickedElement.classList.contains('pictures')) {
+      setActiveFilter(clickedElement.id);
+    }
+  });
+
+  function fillPage() {
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(function() {
+      var footerCoordinates = container.getBoundingClientRect();
+      var viewportSize = window.innerHeight;
+      if (footerCoordinates.bottom - viewportSize <= footerCoordinates.height) {
+        if (currentPage < Math.ceil(filteredPictures.length / PAGE_SIZE)) {
+          renderPhoto(filteredPictures, ++currentPage);
+        }
+      }
+    }, 100);
+  }
 
   function setActiveFilter(id) {
-    var filteredPictures = loadedPictures.slice(0);
+    filteredPictures = loadedPictures.slice(0);
     var sortingFunction;
     switch (id) {
       case 'filter-discussed':
@@ -40,20 +65,25 @@
     }
     filteredPictures = filteredPictures.sort(sortingFunction);
     activeFilter = id;
-    renderPhoto(filteredPictures);
+    renderPhoto(filteredPictures, 0, true);
   }
 
-  function renderPhoto(pictures) {
-    container.innerHTML = '';
+  function renderPhoto(pictures, pageNumber, replace) {
+    if (replace) {
+      container.innerHTML = '';
+    }
     var fragment = document.createDocumentFragment();
-    pictures.forEach(function(picture) {
+    var from = pageNumber * PAGE_SIZE;
+    var to = from + PAGE_SIZE;
+    var pagePicture = pictures.slice(from, to);
+
+    pagePicture.forEach(function(picture) {
       var element = getObjectFromTemplate(picture);
       fragment.appendChild(element);
     });
     container.appendChild(fragment);
     container.classList.remove('pictures-loading');
   }
-
 
   function getPictures() {
     var xhr = new XMLHttpRequest();
@@ -104,6 +134,6 @@
     return element;
   }
 
-
   filters.classList.remove('hidden');
+
 })();
