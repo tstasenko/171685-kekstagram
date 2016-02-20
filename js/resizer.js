@@ -39,7 +39,6 @@
           this._container.width / 2 - side / 2,
           this._container.height / 2 - side / 2,
           side);
-
       // Отрисовка изначального состояния канваса.
       this.redraw();
     }.bind(this);
@@ -83,10 +82,6 @@
       // Очистка изображения.
       this._ctx.clearRect(0, 0, this._container.width, this._container.height);
 
-// Параметры линии.
-      // NB! Такие параметры сохраняются на время всего процесса отрисовки
-      // canvas'a поэтому важно вовремя поменять их, если нужно начать отрисовку
-      // чего-либо с другой обводкой.
 
       // Толщина линии.
       this._ctx.lineWidth = 6;
@@ -112,36 +107,37 @@
       // Координаты задаются от центра холста.
       this._ctx.drawImage(this._image, displX, displY);
 
-// Отрисовка затемненного фона прямоугольниками.
+      // Отрисовка затемненного фона прямоугольниками.
       this._ctx.fillStyle = 'rgba(0,0,0,0.8)';
-      this._ctx.rect(
+
+      this._ctx.fillRect(
         (-this._container.width / 2) - this._ctx.lineWidth, // x
         -this._container.height / 2, //y
         (this._container.width - this._resizeConstraint.side) / 2, //ширина
         this._container.height //высота
       );
 
-      this._ctx.rect(
+      this._ctx.fillRect(
         this._resizeConstraint.side / 2,
         -this._container.height / 2,
         (this._container.width - this._resizeConstraint.side) / 2,
         this._container.height
         );
 
-      this._ctx.rect(
+      this._ctx.fillRect(
         -(this._resizeConstraint.side / 2) - this._ctx.lineWidth,
         -this._container.height / 2,
         this._resizeConstraint.side + this._ctx.lineWidth,
         ((this._container.height - this._resizeConstraint.side) / 2) - this._ctx.lineWidth
         );
 
-      this._ctx.rect(
+      this._ctx.fillRect(
         -(this._resizeConstraint.side / 2) - this._ctx.lineWidth,
         this._resizeConstraint.side / 2,
         this._resizeConstraint.side + this._ctx.lineWidth,
         ((this._container.height - this._resizeConstraint.side)) - this._ctx.lineWidth
         );
-      this._ctx.fill();
+
 
       this.textSizeImage(this._image.naturalWidth + ' x ' + this._image.naturalHeight);
 
@@ -162,6 +158,13 @@
       this._ctx.restore();
     },
 
+    textSizeImage: function(text) {
+      var textSize = 10;
+      this._ctx.fillStyle = '#FFF';
+      this._ctx.font = textSize + 'pt Arial';
+      this._ctx.fillText(text, -35, -this._resizeConstraint.side / 2 - textSize * 2);
+    },
+
     /**
      * Включение режима перемещения. Запоминается текущее положение курсора,
      * устанавливается флаг, разрешающий перемещение и добавляются обработчики,
@@ -170,14 +173,6 @@
      * @param {number} y
      * @private
      */
-
-    textSizeImage: function(text) {
-      var textSize = 10;
-      this._ctx.fillStyle = '#FFF';
-      this._ctx.font = textSize + 'pt Arial';
-      this._ctx.fillText(text, -35, -this._resizeConstraint.side / 2 - textSize * 2);
-    },
-
     _enterDragMode: function(x, y) {
       this._cursorPosition = new Coordinate(x, y);
       document.body.addEventListener('mousemove', this._onDrag);
