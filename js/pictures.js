@@ -116,8 +116,5 @@
     xhr.send();
   }
 
-
-
   filters.classList.remove('hidden');
-
 })();
