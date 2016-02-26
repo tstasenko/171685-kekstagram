@@ -40,6 +40,4 @@
 
   window.Photo = Photo;
 
-
-
 })();
