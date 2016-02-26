@@ -1,4 +1,6 @@
 
+/* global Photo: true */
+
 'use strict';
 
 (function() {
@@ -6,6 +8,7 @@
   var filters = document.querySelector('.filters');
   var loadedPictures = [];
   var filteredPictures = [];
+  var renderedPhotos = [];
   var activeFilter = 'filter-popular';
   var currentPage = 0;
   var PAGE_SIZE = 12;
@@ -22,7 +25,7 @@
 
   filters.addEventListener('click', function(event) {
     var clickedElement = event.target;
-    if (clickedElement.classList.contains('pictures')) {
+    if (clickedElement.classList.contains('filters-radio')) {
       setActiveFilter(clickedElement.id);
     }
   });
@@ -70,16 +73,24 @@
 
   function renderPhoto(pictures, pageNumber, replace) {
     if (replace) {
-      container.innerHTML = '';
+      var el;
+      while ((el = renderedPhotos.shift())) {
+        container.removeChild(el.element);
+        el.onClick = null;
+        el.remove();
+      }
     }
+
     var fragment = document.createDocumentFragment();
     var from = pageNumber * PAGE_SIZE;
     var to = from + PAGE_SIZE;
     var pagePicture = pictures.slice(from, to);
 
-    pagePicture.forEach(function(picture) {
-      var element = getObjectFromTemplate(picture);
-      fragment.appendChild(element);
+    pagePicture.forEach(function(photo) {
+      var photoElement = new Photo(photo);
+      photoElement.render();
+      fragment.appendChild(photoElement.element);
+      renderedPhotos.push(photoElement);
     });
     container.appendChild(fragment);
     container.classList.remove('pictures-loading');
@@ -105,35 +116,5 @@
     xhr.send();
   }
 
-  function getObjectFromTemplate(data) {
-    var template = document.querySelector('#picture-template');
-    var element = template.content.children[0].cloneNode(true);
-    var IMAGE_TIMEOUT = 10000;
-
-    element.querySelector('.picture-comments').textContent = data.comments;
-    element.querySelector('.picture-likes').textContent = data.likes;
-
-    var previewImage = new Image(182, 182);
-
-    previewImage.onload = function() {
-      clearTimeout(imageLoadTimeout);
-      element.replaceChild(previewImage, element.querySelector('img'));
-    };
-
-    previewImage.onerror = function() {
-      element.classList.add('picture-load-failure');
-    };
-
-    previewImage.src = data.url;
-
-    var imageLoadTimeout = setTimeout(function() {
-      previewImage.src = '';
-      element.classList.add('picture-load-failure');
-    }, IMAGE_TIMEOUT);
-
-    return element;
-  }
-
   filters.classList.remove('hidden');
-
 })();
