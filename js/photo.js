@@ -39,7 +39,4 @@
   };
 
   window.Photo = Photo;
-
-
-
 })();
