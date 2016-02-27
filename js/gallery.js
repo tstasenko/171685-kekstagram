@@ -23,13 +23,14 @@
     this._closeButton.removeEventListener('click', this._onCloseClick);
     window.removeEventListener('keyup', this._onDocumentKeyDown);
   };
+
   Gallery.prototype._onCloseClick = function() {
     this.hide();
   };
 
   Gallery.prototype._onPhotoClick = function() {
-   console.log(1);
   };
+
   Gallery.prototype._onDocumentKeyDown = function(evt) {
     if (evt.keyCode === 27) {
       this.hide();
