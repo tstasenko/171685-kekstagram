@@ -1,5 +1,5 @@
 
-/* global Photo: true */
+/* global Photo: true, Gallery: true */
 
 'use strict';
 
@@ -8,11 +8,11 @@
   var filters = document.querySelector('.filters');
   var loadedPictures = [];
   var filteredPictures = [];
-  var renderedPhotos = [];
   var activeFilter = 'filter-popular';
   var currentPage = 0;
   var PAGE_SIZE = 12;
   var scrollTimeout;
+  var gallery = new Gallery();
 
   filters.classList.add('hidden');
   container.classList.add('pictures-loading');
@@ -73,13 +73,13 @@
 
   function renderPhoto(pictures, pageNumber, replace) {
     if (replace) {
-      var el;
-      while ((el = renderedPhotos.shift())) {
-        container.removeChild(el.element);
-        el.onClick = null;
-        el.remove();
-      }
+      var renderedPhotos = container.querySelectorAll('.picture');
+      [].forEach.call(renderedPhotos, function(el) {
+        el.removeEventListener('click', _onClick);
+        container.removeChild(el);
+      });
     }
+
 
     var fragment = document.createDocumentFragment();
     var from = pageNumber * PAGE_SIZE;
@@ -90,10 +90,15 @@
       var photoElement = new Photo(photo);
       photoElement.render();
       fragment.appendChild(photoElement.element);
-      renderedPhotos.push(photoElement);
+      photoElement.element.addEventListener('click', _onClick);
     });
     container.appendChild(fragment);
     container.classList.remove('pictures-loading');
+  }
+
+  function _onClick(evt) {
+    evt.preventDefault();
+    gallery.show();
   }
 
   function getPictures() {
